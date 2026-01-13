@@ -41,23 +41,34 @@ const Repairs = ({ isDarkMode }) => {
     }, 3000);
   };
 
+  // ✅ FIXED: Safer Fetch Logic
   const fetchTickets = async () => {
     const token = localStorage.getItem('accessToken');
     try {
-      const response = await fetch(`${API_BASE_URL}/api/dashboard/`, {
+      const response = await fetch(`${API_BASE_URL}/api/repairs/`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
         const data = await response.json();
-        setTickets(data);
+        // Check if data is an Array (Standard) or Paginated Object
+        if (Array.isArray(data)) {
+            setTickets(data);
+        } else if (data.results && Array.isArray(data.results)) {
+            setTickets(data.results); // Handle Django Pagination
+        } else {
+            console.error("Repairs API returned unexpected format:", data);
+            setTickets([]); // Fallback to empty list to prevent crash
+        }
       }
       setLoading(false);
     } catch (err) {
       console.error("Error fetching repairs:", err);
       setLoading(false);
+      setTickets([]);
     }
   };
 
+  // ✅ FIXED: Safer Fetch Logic
   const fetchItems = async () => {
     const token = localStorage.getItem('accessToken');
     try {
@@ -66,14 +77,24 @@ const Repairs = ({ isDarkMode }) => {
       });
       if (response.ok) {
         const data = await response.json();
-        setItems(data);
+        if (Array.isArray(data)) {
+            setItems(data);
+        } else if (data.results && Array.isArray(data.results)) {
+            setItems(data.results);
+        } else {
+            setItems([]);
+        }
       }
     } catch (err) {
       console.error("Error fetching items:", err);
+      setItems([]);
     }
   };
 
-  const groupedItems = items.reduce((acc, item) => {
+  // Ensure items is an array before reducing
+  const safeItems = Array.isArray(items) ? items : [];
+
+  const groupedItems = safeItems.reduce((acc, item) => {
     const category = item.category || 'Uncategorized';
     if (!acc[category]) acc[category] = [];
     acc[category].push(item);
@@ -240,38 +261,47 @@ const Repairs = ({ isDarkMode }) => {
                 </tr>
             </thead>
             <tbody className={`divide-y ${isDarkMode ? 'divide-gray-700' : 'divide-gray-100'}`}>
-                {tickets.map((ticket) => (
-                <tr key={ticket.id} className={`transition-colors ${isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}`}>
-                    <td className="px-6 py-4 text-sm opacity-70">{ticket.customer_id || '-'}</td>
-                    <td className="px-6 py-4 font-medium">{ticket.customer_name}</td>
-                    <td className="px-6 py-4 opacity-80 flex items-center gap-2">
-                        <Wrench size={16} className="opacity-50"/>
-                        {ticket.device_model}
-                    </td>
-                    <td className="px-6 py-4">
-                    <span className={`px-3 py-1 rounded-full text-xs font-bold border ${getStatusColor(ticket.status)}`}>
-                        {ticket.status}
-                    </span>
-                    </td>
-                    <td className="px-6 py-4 font-bold text-brand-600">Rs. {ticket.estimated_cost}</td>
-                    <td className="px-6 py-4 flex gap-3">
-                        <button 
-                            onClick={() => openEditModal(ticket)} 
-                            className={`p-2 rounded-full transition-colors ${editBtnClass}`}
-                            title="Edit"
-                        >
-                            <Edit size={18} />
-                        </button>
-                        <button 
-                            onClick={() => openDeleteModal(ticket.id)} 
-                            className={`p-2 rounded-full transition-colors ${deleteBtnClass}`}
-                            title="Delete"
-                        >
-                            <Trash2 size={18} />
-                        </button>
-                    </td>
-                </tr>
-                ))}
+                {/* ✅ FIXED: Safer Mapping (checks if tickets is array) */}
+                {Array.isArray(tickets) && tickets.length > 0 ? (
+                    tickets.map((ticket) => (
+                    <tr key={ticket.id} className={`transition-colors ${isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}`}>
+                        <td className="px-6 py-4 text-sm opacity-70">{ticket.customer_id || '-'}</td>
+                        <td className="px-6 py-4 font-medium">{ticket.customer_name}</td>
+                        <td className="px-6 py-4 opacity-80 flex items-center gap-2">
+                            <Wrench size={16} className="opacity-50"/>
+                            {ticket.device_model}
+                        </td>
+                        <td className="px-6 py-4">
+                        <span className={`px-3 py-1 rounded-full text-xs font-bold border ${getStatusColor(ticket.status)}`}>
+                            {ticket.status}
+                        </span>
+                        </td>
+                        <td className="px-6 py-4 font-bold text-brand-600">Rs. {ticket.estimated_cost}</td>
+                        <td className="px-6 py-4 flex gap-3">
+                            <button 
+                                onClick={() => openEditModal(ticket)} 
+                                className={`p-2 rounded-full transition-colors ${editBtnClass}`}
+                                title="Edit"
+                            >
+                                <Edit size={18} />
+                            </button>
+                            <button 
+                                onClick={() => openDeleteModal(ticket.id)} 
+                                className={`p-2 rounded-full transition-colors ${deleteBtnClass}`}
+                                title="Delete"
+                            >
+                                <Trash2 size={18} />
+                            </button>
+                        </td>
+                    </tr>
+                    ))
+                ) : (
+                    <tr>
+                        <td colSpan="6" className="p-8 text-center opacity-50">
+                            {tickets.length === 0 ? "No repair tickets found." : "Error loading data."}
+                        </td>
+                    </tr>
+                )}
             </tbody>
             </table>
         )}
