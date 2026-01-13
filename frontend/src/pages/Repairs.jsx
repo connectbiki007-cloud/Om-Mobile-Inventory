@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, X, CheckCircle, Wrench, AlertTriangle } from 'lucide-react';
-import { API_BASE_URL } from '../config'; // <--- Ensure this is imported
+import { API_BASE_URL } from '../config';
 
 const Repairs = ({ isDarkMode }) => {
   const [tickets, setTickets] = useState([]);
@@ -8,14 +8,12 @@ const Repairs = ({ isDarkMode }) => {
   const [loading, setLoading] = useState(true);
   
   // --- MODAL STATES ---
-  const [isModalOpen, setIsModalOpen] = useState(false); // For Add/Edit
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For Delete Confirmation
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   
   const [isEditing, setIsEditing] = useState(false);
   const [currentId, setCurrentId] = useState(null);
-  const [deleteId, setDeleteId] = useState(null); // Store ID to delete
-
-  // Notification State
+  const [deleteId, setDeleteId] = useState(null);
   const [notification, setNotification] = useState(null);
 
   // Form State
@@ -46,7 +44,6 @@ const Repairs = ({ isDarkMode }) => {
   const fetchTickets = async () => {
     const token = localStorage.getItem('accessToken');
     try {
-      // ✅ Corrected URL
       const response = await fetch(`${API_BASE_URL}/api/repairs/`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -64,7 +61,6 @@ const Repairs = ({ isDarkMode }) => {
   const fetchItems = async () => {
     const token = localStorage.getItem('accessToken');
     try {
-      // ✅ FIXED: Changed from localhost to API_BASE_URL
       const response = await fetch(`${API_BASE_URL}/api/items/`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -117,7 +113,6 @@ const Repairs = ({ isDarkMode }) => {
         
         if (selectedPart) {
             const ticketId = isEditing ? currentId : savedTicket.id;
-            // ✅ Corrected URL
             await fetch(`${API_BASE_URL}/api/repairs/parts/`, {
                 method: 'POST',
                 headers: { 
@@ -143,19 +138,16 @@ const Repairs = ({ isDarkMode }) => {
     }
   };
 
-  // --- NEW: OPEN DELETE CONFIRMATION ---
   const openDeleteModal = (id) => {
       setDeleteId(id);
       setIsDeleteModalOpen(true);
   };
 
-  // --- NEW: ACTUAL DELETE ACTION ---
   const confirmDelete = async () => {
     if (!deleteId) return;
 
     const token = localStorage.getItem('accessToken');
     try {
-      // ✅ Corrected URL
       const response = await fetch(`${API_BASE_URL}/api/repairs/${deleteId}/`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
@@ -164,7 +156,7 @@ const Repairs = ({ isDarkMode }) => {
       if (response.ok) {
         fetchTickets();
         showNotification("Ticket Deleted Successfully! 🗑️");
-        setIsDeleteModalOpen(false); // Close Modal
+        setIsDeleteModalOpen(false);
         setDeleteId(null);
       }
     } catch (err) {
@@ -204,7 +196,7 @@ const Repairs = ({ isDarkMode }) => {
     }
   };
 
-  // --- STYLES ---
+  // Styles
   const cardClass = isDarkMode ? 'bg-gray-800 border-gray-700 text-white' : 'bg-white border-gray-100 text-gray-800';
   const inputClass = isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-800';
   const headerClass = isDarkMode ? 'bg-gray-700 text-gray-200' : 'bg-gray-50 text-gray-600';
@@ -214,7 +206,6 @@ const Repairs = ({ isDarkMode }) => {
   return (
     <div className={`p-8 relative ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
       
-      {/* SUCCESS NOTIFICATION */}
       {notification && (
         <div className="fixed top-5 right-5 bg-green-600 text-white px-6 py-3 rounded-lg shadow-xl flex items-center gap-3 animate-bounce-in z-50">
             <CheckCircle size={24} />
@@ -286,7 +277,6 @@ const Repairs = ({ isDarkMode }) => {
         )}
       </div>
 
-      {/* --- ADD/EDIT MODAL --- */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className={`rounded-xl shadow-lg w-full max-w-md flex flex-col max-h-[90vh] ${cardClass}`}>
@@ -367,7 +357,6 @@ const Repairs = ({ isDarkMode }) => {
         </div>
       )}
 
-      {/* --- DELETE CONFIRMATION MODAL (CUSTOM CSS) --- */}
       {isDeleteModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[60]">
             <div className={`rounded-xl shadow-2xl w-full max-w-sm p-6 flex flex-col items-center text-center animate-bounce-in ${cardClass}`}>
