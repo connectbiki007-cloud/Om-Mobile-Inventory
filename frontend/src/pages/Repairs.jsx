@@ -44,7 +44,7 @@ const Repairs = ({ isDarkMode }) => {
   const fetchTickets = async () => {
     const token = localStorage.getItem('accessToken');
     try {
-      const response = await fetch(`${API_BASE_URL}/api/repairs/`, {
+      const response = await fetch(`${API_BASE_URL}/api/dashboard/`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
