@@ -44,7 +44,7 @@ const Dashboard = ({ isDarkMode }) => {
     setLoading(true);
     const token = localStorage.getItem('accessToken');
     try {
-      const response = await fetch(`${API_BASE_URL}/api/dashboard/`), {
+      const response = await fetch(`${API_BASE_URL}/api/dashboard/`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
