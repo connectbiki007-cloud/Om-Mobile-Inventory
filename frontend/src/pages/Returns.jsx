@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PackageX, Plus, X, Edit, Trash2, CheckCircle, AlertTriangle, ArrowUpDown } from 'lucide-react';
+import { API_BASE_URL } from '../config'; // <--- Ensure this is imported
 
 const Returns = ({ isDarkMode }) => {
   const [damagedItems, setDamagedItems] = useState([]);
@@ -35,7 +36,8 @@ const Returns = ({ isDarkMode }) => {
 
   const fetchDamagedItems = async () => {
     const token = localStorage.getItem('accessToken');
-    const res = await fetch('http://127.0.0.1:8000/api/damaged/', {
+    // ✅ FIXED: Used API_BASE_URL
+    const res = await fetch(`${API_BASE_URL}/api/damaged/`, {
         headers: { 'Authorization': `Bearer ${token}` }
     });
     if(res.ok) setDamagedItems(await res.json());
@@ -43,7 +45,8 @@ const Returns = ({ isDarkMode }) => {
 
   const fetchInventory = async () => {
     const token = localStorage.getItem('accessToken');
-    const res = await fetch('http://127.0.0.1:8000/api/items/', {
+    // ✅ FIXED: Used API_BASE_URL
+    const res = await fetch(`${API_BASE_URL}/api/items/`, {
         headers: { 'Authorization': `Bearer ${token}` }
     });
     if(res.ok) setItems(await res.json());
@@ -81,9 +84,10 @@ const Returns = ({ isDarkMode }) => {
     e.preventDefault();
     const token = localStorage.getItem('accessToken');
     
+    // ✅ FIXED: Used API_BASE_URL
     const url = isEditing 
-        ? `http://127.0.0.1:8000/api/damaged/${currentReportId}/` 
-        : 'http://127.0.0.1:8000/api/damaged/';
+        ? `${API_BASE_URL}/api/damaged/${currentReportId}/` 
+        : `${API_BASE_URL}/api/damaged/`;
         
     const method = isEditing ? 'PUT' : 'POST';
 
@@ -113,7 +117,8 @@ const Returns = ({ isDarkMode }) => {
       if (!deleteId) return;
       
       const token = localStorage.getItem('accessToken');
-      const res = await fetch(`http://127.0.0.1:8000/api/damaged/${deleteId}/`, {
+      // ✅ FIXED: Used API_BASE_URL
+      const res = await fetch(`${API_BASE_URL}/api/damaged/${deleteId}/`, {
           method: 'DELETE',
           headers: { 'Authorization': `Bearer ${token}` }
       });

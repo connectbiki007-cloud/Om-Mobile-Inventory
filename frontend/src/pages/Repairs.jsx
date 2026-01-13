@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, X, CheckCircle, Wrench, AlertTriangle } from 'lucide-react';
+import { API_BASE_URL } from '../config'; // <--- Ensure this is imported
 
 const Repairs = ({ isDarkMode }) => {
   const [tickets, setTickets] = useState([]);
@@ -45,7 +46,8 @@ const Repairs = ({ isDarkMode }) => {
   const fetchTickets = async () => {
     const token = localStorage.getItem('accessToken');
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/repairs/', {
+      // ✅ Corrected URL
+      const response = await fetch(`${API_BASE_URL}/api/repairs/`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -62,7 +64,8 @@ const Repairs = ({ isDarkMode }) => {
   const fetchItems = async () => {
     const token = localStorage.getItem('accessToken');
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/items/', {
+      // ✅ FIXED: Changed from localhost to API_BASE_URL
+      const response = await fetch(`${API_BASE_URL}/api/items/`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -86,8 +89,8 @@ const Repairs = ({ isDarkMode }) => {
     const token = localStorage.getItem('accessToken');
     
     const url = isEditing 
-      ? `http://127.0.0.1:8000/api/repairs/${currentId}/` 
-      : 'http://127.0.0.1:8000/api/repairs/';
+      ? `${API_BASE_URL}/api/repairs/${currentId}/` 
+      : `${API_BASE_URL}/api/repairs/`;
       
     const method = isEditing ? 'PUT' : 'POST';
 
@@ -114,7 +117,8 @@ const Repairs = ({ isDarkMode }) => {
         
         if (selectedPart) {
             const ticketId = isEditing ? currentId : savedTicket.id;
-            await fetch('http://127.0.0.1:8000/api/repairs/parts/', {
+            // ✅ Corrected URL
+            await fetch(`${API_BASE_URL}/api/repairs/parts/`, {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json', 
@@ -151,7 +155,8 @@ const Repairs = ({ isDarkMode }) => {
 
     const token = localStorage.getItem('accessToken');
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/repairs/${deleteId}/`, {
+      // ✅ Corrected URL
+      const response = await fetch(`${API_BASE_URL}/api/repairs/${deleteId}/`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });

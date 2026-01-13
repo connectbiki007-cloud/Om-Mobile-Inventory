@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Lock, User, CheckCircle, X, Smartphone, Wrench, Cpu, Battery, Zap } from 'lucide-react';
+import { API_BASE_URL } from '../config'; // <--- Ensure this is imported
 
 const Login = ({ setToken }) => {
   const [username, setUsername] = useState('');
@@ -22,7 +23,8 @@ const Login = ({ setToken }) => {
     setError(''); 
     
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/token/', {
+      // ✅ FIXED: Used backticks (`) instead of single quotes (')
+      const response = await fetch(`${API_BASE_URL}/api/token/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })

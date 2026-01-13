@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Search, X, Edit, Trash2, AlertCircle, CheckCircle, ArrowUpDown, FileSpreadsheet, AlertTriangle } from 'lucide-react';
+import { API_BASE_URL } from '../config'; // <--- Ensure this is imported
 
 const Inventory = ({ isDarkMode }) => {
   const [items, setItems] = useState([]);
@@ -39,7 +40,8 @@ const Inventory = ({ isDarkMode }) => {
   const fetchItems = async () => {
     const token = localStorage.getItem('accessToken');
     try {
-      let url = 'http://127.0.0.1:8000/api/items/';
+      // ✅ FIXED: Used backticks (`) instead of single quotes (')
+      let url = `${API_BASE_URL}/api/items/`;
       if (sortConfig.key) {
           const prefix = sortConfig.direction === 'asc' ? '' : '-';
           url += `?ordering=${prefix}${sortConfig.key}`;
@@ -92,7 +94,12 @@ const Inventory = ({ isDarkMode }) => {
   const handleSaveItem = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('accessToken');
-    const url = isEditing ? `http://127.0.0.1:8000/api/items/${currentId}/` : 'http://127.0.0.1:8000/api/items/';
+    
+    // ✅ FIXED: Used backticks (`) for both URLs
+    const url = isEditing 
+        ? `${API_BASE_URL}/api/items/${currentId}/` 
+        : `${API_BASE_URL}/api/items/`;
+        
     const method = isEditing ? 'PUT' : 'POST';
 
     try {
@@ -132,7 +139,8 @@ const Inventory = ({ isDarkMode }) => {
 
     const token = localStorage.getItem('accessToken');
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/items/${deleteId}/`, {
+      // ✅ FIXED: Used backticks (`)
+      const response = await fetch(`${API_BASE_URL}/api/items/${deleteId}/`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });

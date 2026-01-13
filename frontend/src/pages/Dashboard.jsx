@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Cell } from 'recharts';
 import { Link } from 'react-router-dom';
+import { API_BASE_URL } from '../config';
 
 const Dashboard = ({ isDarkMode }) => {
   const [stats, setStats] = useState({
@@ -43,7 +44,7 @@ const Dashboard = ({ isDarkMode }) => {
     setLoading(true);
     const token = localStorage.getItem('accessToken');
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/dashboard/', {
+      const response = await fetch(`${API_BASE_URL}/api/dashboard/`), {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {

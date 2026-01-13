@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Plus, X, Printer, Edit, Trash2, CheckCircle, Users, User, FileSpreadsheet, AlertTriangle } from 'lucide-react';
 import { useReactToPrint } from 'react-to-print';
+import { API_BASE_URL } from '../config'; // <--- Ensure this is imported
 
 const Sales = ({ isDarkMode }) => {
   const [sales, setSales] = useState([]);
@@ -52,13 +53,15 @@ const Sales = ({ isDarkMode }) => {
 
   const fetchSales = async () => {
     const token = localStorage.getItem('accessToken');
-    const res = await fetch('http://127.0.0.1:8000/api/sales/', { headers: { 'Authorization': `Bearer ${token}` } });
+    // ✅ FIXED: Used API_BASE_URL
+    const res = await fetch(`${API_BASE_URL}/api/sales/`, { headers: { 'Authorization': `Bearer ${token}` } });
     if (res.ok) setSales(await res.json());
   };
   
   const fetchItems = async () => {
     const token = localStorage.getItem('accessToken');
-    const res = await fetch('http://127.0.0.1:8000/api/items/', { headers: { 'Authorization': `Bearer ${token}` } });
+    // ✅ FIXED: Used API_BASE_URL
+    const res = await fetch(`${API_BASE_URL}/api/items/`, { headers: { 'Authorization': `Bearer ${token}` } });
     if (res.ok) setItems(await res.json());
   };
 
@@ -133,7 +136,12 @@ const Sales = ({ isDarkMode }) => {
   const handleSaleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('accessToken');
-    const url = isEditing ? `http://127.0.0.1:8000/api/sales/${currentSaleId}/` : 'http://127.0.0.1:8000/api/sales/';
+    
+    // ✅ FIXED: Used backticks (`) and API_BASE_URL
+    const url = isEditing 
+        ? `${API_BASE_URL}/api/sales/${currentSaleId}/` 
+        : `${API_BASE_URL}/api/sales/`;
+        
     const method = isEditing ? 'PUT' : 'POST';
     
     const res = await fetch(url, {
@@ -167,7 +175,12 @@ const Sales = ({ isDarkMode }) => {
   const confirmDelete = async () => {
     if (!deleteId) return;
     const token = localStorage.getItem('accessToken');
-    const res = await fetch(`http://127.0.0.1:8000/api/sales/${deleteId}/`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+    
+    // ✅ FIXED: Used backticks (`) and API_BASE_URL
+    const res = await fetch(`${API_BASE_URL}/api/sales/${deleteId}/`, { 
+        method: 'DELETE', 
+        headers: { 'Authorization': `Bearer ${token}` } 
+    });
     
     if (res.ok) { 
         fetchSales(); 
