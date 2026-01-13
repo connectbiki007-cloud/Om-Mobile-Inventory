@@ -1,0 +1,34 @@
+/* 1. Import a modern font (Inter) from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* 2. Tailwind Directives (Required) */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 3. Global Styles */
+body {
+  background-color: #f3f4f6; /* Light gray background makes white cards stand out */
+  font-family: 'Inter', sans-serif; /* Applies the font imported above */
+  -webkit-font-smoothing: antialiased; /* Makes text look sharper */
+  color: #1f2937; /* Dark gray text is easier to read than pure black */
+}
+
+/* 4. Custom Scrollbar (Optional - makes the scrollbar look nicer than the default Windows one) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; 
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8; 
+}

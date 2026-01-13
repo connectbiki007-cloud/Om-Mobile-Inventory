@@ -1,0 +1,71 @@
+# ========================
+# GLOBAL / OS / IDE FILES
+# ========================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ========================
+# BACKEND (Django & Python)
+# ========================
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environments
+venv/
+env/
+.env/
+.venv/
+
+# Local Database (NEVER upload this)
+*.sqlite3
+*.sqlite3-journal
+
+# Environment Variables (Secrets)
+.env
+.env.local
+.env.*
+
+# Static & Media (Collected files)
+/backend/staticfiles/
+/backend/media/
+
+# Logs
+*.log
+
+# ========================
+# FRONTEND (React & Node)
+# ========================
+# Dependencies (Heavy folders)
+node_modules/
+/frontend/node_modules/
+
+# Production Build Output
+/frontend/dist/
+/frontend/build/
+
+# Local Environment Variables
+/frontend/.env.local
+/frontend/.env.development.local
+/frontend/.env.test.local
+/frontend/.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Testing
+/frontend/coverage/
+
+# ========================
+# OPTIONAL EXTRAS
+# ========================
+# If you ever use Docker
+.docker/
