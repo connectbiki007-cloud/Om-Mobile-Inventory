@@ -143,3 +143,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Allow everyone initially so your Vercel frontend connects without issues.
 # You can restrict this later to just ["https://your-app.vercel.app"]
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
